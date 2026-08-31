@@ -1,0 +1,551 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Animation</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(
+        to bottom,
+        #69c9ff 0%,
+        #b8eaff 65%,
+        #8fd35f 65%,
+        #5ca63b 100%
+      );
+      height: 100vh;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sun */
+    .sun {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      right: 12%;
+      top: 10%;
+      background: #ffd93d;
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(255, 217, 61, 0.8);
+    }
+
+    /* Clouds */
+    .cloud {
+      position: absolute;
+      width: 150px;
+      height: 45px;
+      background: white;
+      border-radius: 50px;
+      opacity: 0.85;
+      animation: cloudMove 30s linear infinite;
+    }
+
+    .cloud::before,
+    .cloud::after {
+      content: "";
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .cloud::before {
+      width: 65px;
+      height: 65px;
+      left: 25px;
+      bottom: 10px;
+    }
+
+    .cloud::after {
+      width: 80px;
+      height: 80px;
+      right: 20px;
+      bottom: 5px;
+    }
+
+    .cloud-1 {
+      top: 15%;
+      left: -180px;
+    }
+
+    .cloud-2 {
+      top: 28%;
+      left: -350px;
+      animation-delay: 10s;
+      transform: scale(0.7);
+    }
+
+    @keyframes cloudMove {
+      from {
+        left: -250px;
+      }
+
+      to {
+        left: 110%;
+      }
+    }
+
+    /* Mountains */
+    .mountains {
+      position: absolute;
+      bottom: 35%;
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-left: 180px solid transparent;
+      border-right: 180px solid transparent;
+      border-bottom: 280px solid #638d68;
+    }
+
+    .mountain:nth-child(1) {
+      left: 5%;
+    }
+
+    .mountain:nth-child(2) {
+      left: 30%;
+      border-left-width: 230px;
+      border-right-width: 230px;
+      border-bottom-color: #547b5b;
+    }
+
+    .mountain:nth-child(3) {
+      right: 5%;
+      border-left-width: 200px;
+      border-right-width: 200px;
+      border-bottom-color: #6e9872;
+    }
+
+    /* Road */
+    .road {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 35%;
+      background: #333;
+      border-top: 8px solid #555;
+    }
+
+    /* Road lines */
+    .road-lines {
+      position: absolute;
+      top: 48%;
+      width: 100%;
+      height: 12px;
+      background: repeating-linear-gradient(
+        to right,
+        #fff 0,
+        #fff 100px,
+        transparent 100px,
+        transparent 180px
+      );
+      animation: roadMove 1s linear infinite;
+    }
+
+    @keyframes roadMove {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-180px);
+      }
+    }
+
+    /* Grass */
+    .grass {
+      position: absolute;
+      bottom: 35%;
+      width: 100%;
+      height: 20px;
+      background: #4f9836;
+    }
+
+    /* Car */
+    .car {
+      position: absolute;
+      width: 330px;
+      height: 150px;
+      bottom: 17%;
+      left: -380px;
+      animation: drive 8s linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes drive {
+      0% {
+        left: -380px;
+      }
+
+      100% {
+        left: calc(100% + 50px);
+      }
+    }
+
+    /* Car body */
+    .car-body {
+      position: absolute;
+      width: 330px;
+      height: 80px;
+      bottom: 25px;
+      background: linear-gradient(
+        to bottom,
+        #ff3b3b,
+        #c91616
+      );
+      border-radius: 50px 65px 20px 20px;
+      box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    /* Car roof */
+    .car-roof {
+      position: absolute;
+      width: 180px;
+      height: 75px;
+      left: 75px;
+      bottom: 75px;
+      background: #d51b1b;
+      border-radius: 90px 90px 0 0;
+    }
+
+    /* Windows */
+    .window {
+      position: absolute;
+      bottom: 82px;
+      height: 50px;
+      background: linear-gradient(
+        135deg,
+        #bdefff,
+        #30627a
+      );
+      border: 4px solid #b20f0f;
+    }
+
+    .window-left {
+      left: 91px;
+      width: 70px;
+      border-radius: 50px 5px 5px 5px;
+    }
+
+    .window-right {
+      left: 166px;
+      width: 70px;
+      border-radius: 5px 50px 5px 5px;
+    }
+
+    /* Window divider */
+    .divider {
+      position: absolute;
+      left: 160px;
+      bottom: 82px;
+      width: 5px;
+      height: 52px;
+      background: #a80d0d;
+      z-index: 2;
+    }
+
+    /* Headlights */
+    .headlight {
+      position: absolute;
+      right: -3px;
+      bottom: 57px;
+      width: 18px;
+      height: 25px;
+      background: #fff6a3;
+      border-radius: 8px;
+      box-shadow: 0 0 25px #fff4a3;
+    }
+
+    /* Rear light */
+    .rear-light {
+      position: absolute;
+      left: -2px;
+      bottom: 55px;
+      width: 14px;
+      height: 23px;
+      background: #ff6b6b;
+      border-radius: 5px;
+    }
+
+    /* Bumpers */
+    .bumper {
+      position: absolute;
+      bottom: 23px;
+      width: 25px;
+      height: 15px;
+      background: #222;
+      border-radius: 5px;
+    }
+
+    .front-bumper {
+      right: -8px;
+    }
+
+    .back-bumper {
+      left: -8px;
+    }
+
+    /* Wheels */
+    .wheel {
+      position: absolute;
+      width: 65px;
+      height: 65px;
+      bottom: -5px;
+      background: #111;
+      border-radius: 50%;
+      border: 8px solid #222;
+      animation: wheelRotate 0.5s linear infinite;
+    }
+
+    .wheel::after {
+      content: "";
+      position: absolute;
+      width: 23px;
+      height: 23px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #999;
+      border-radius: 50%;
+      border: 5px solid #555;
+    }
+
+    .wheel-left {
+      left: 50px;
+    }
+
+    .wheel-right {
+      right: 50px;
+    }
+
+    @keyframes wheelRotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Side mirror */
+    .mirror {
+      position: absolute;
+      width: 20px;
+      height: 13px;
+      background: #222;
+      border-radius: 10px;
+      bottom: 112px;
+    }
+
+    .mirror-left {
+      left: 65px;
+    }
+
+    .mirror-right {
+      right: 75px;
+    }
+
+    /* Trees */
+    .tree {
+      position: absolute;
+      bottom: 35%;
+      width: 35px;
+      height: 90px;
+      background: #70432a;
+    }
+
+    .tree::before {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      left: -27px;
+      top: -60px;
+      background: #267b36;
+      border-radius: 50%;
+      box-shadow:
+        35px 15px 0 #328b40,
+        -20px 20px 0 #2c8138;
+    }
+
+    .tree-1 {
+      left: 10%;
+    }
+
+    .tree-2 {
+      left: 70%;
+      transform: scale(0.8);
+    }
+
+    .tree-3 {
+      left: 88%;
+      transform: scale(0.6);
+    }
+
+    /* Speed effect */
+    .speed-line {
+      position: absolute;
+      width: 100px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.5);
+      right: 100%;
+      top: 70px;
+      animation: speedLine 1s linear infinite;
+    }
+
+    .speed-line:nth-child(2) {
+      top: 90px;
+      width: 60px;
+      animation-delay: 0.3s;
+    }
+
+    .speed-line:nth-child(3) {
+      top: 50px;
+      width: 80px;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes speedLine {
+      from {
+        right: 100%;
+        opacity: 1;
+      }
+
+      to {
+        right: -20%;
+        opacity: 0;
+      }
+    }
+
+    /* Title */
+    .title {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      text-align: center;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 20;
+    }
+
+    .title h1 {
+      font-size: 42px;
+      letter-spacing: 3px;
+    }
+
+    .title p {
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .car {
+        transform: scale(0.75);
+        transform-origin: bottom left;
+      }
+
+      .title h1 {
+        font-size: 28px;
+      }
+
+      .sun {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="scene">
+
+    <div class="title">
+      <h1>🚗 CAR ANIMATION</h1>
+      <p>A simple animated driving scene</p>
+    </div>
+
+    <div class="sun"></div>
+
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+
+    <div class="mountains">
+      <div class="mountain"></div>
+      <div class="mountain"></div>
+      <div class="mountain"></div>
+    </div>
+
+    <div class="tree tree-1"></div>
+    <div class="tree tree-2"></div>
+    <div class="tree tree-3"></div>
+
+    <div class="grass"></div>
+
+    <div class="road">
+      <div class="road-lines"></div>
+    </div>
+
+    <!-- Animated Car -->
+    <div class="car">
+
+      <!-- Speed lines -->
+      <div class="speed-line"></div>
+      <div class="speed-line"></div>
+      <div class="speed-line"></div>
+
+      <!-- Roof -->
+      <div class="car-roof"></div>
+
+      <!-- Windows -->
+      <div class="window window-left"></div>
+      <div class="window window-right"></div>
+      <div class="divider"></div>
+
+      <!-- Body -->
+      <div class="car-body"></div>
+
+      <!-- Lights -->
+      <div class="headlight"></div>
+      <div class="rear-light"></div>
+
+      <!-- Bumpers -->
+      <div class="bumper front-bumper"></div>
+      <div class="bumper back-bumper"></div>
+
+      <!-- Mirrors -->
+      <div class="mirror mirror-left"></div>
+      <div class="mirror mirror-right"></div>
+
+      <!-- Wheels -->
+      <div class="wheel wheel-left"></div>
+      <div class="wheel wheel-right"></div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
+```
+
