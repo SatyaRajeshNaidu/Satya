@@ -1,0 +1,158 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class CarAnimation extends JPanel implements Runnable {
+
+    private int carX = -250;
+    private final int carY = 300;
+
+    public CarAnimation() {
+        Thread animationThread = new Thread(this);
+        animationThread.start();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Sky
+        g2.setColor(new Color(135, 206, 235));
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        // Sun
+        g2.setColor(Color.YELLOW);
+        g2.fillOval(700, 50, 80, 80);
+
+        // Grass
+        g2.setColor(new Color(80, 170, 70));
+        g2.fillRect(0, 350, getWidth(), 100);
+
+        // Road
+        g2.setColor(Color.DARK_GRAY);
+        g2.fillRect(0, 300, getWidth(), 100);
+
+        // Road markings
+        g2.setColor(Color.WHITE);
+
+        for (int x = 0; x < getWidth(); x += 100) {
+            g2.fillRect(x, 345, 60, 8);
+        }
+
+        drawCar(g2, carX, carY);
+    }
+
+    private void drawCar(Graphics2D g2, int x, int y) {
+
+        // Car body
+        g2.setColor(Color.RED);
+        g2.fillRoundRect(x, y - 40, 250, 60, 20, 20);
+
+        // Car roof
+        g2.setColor(Color.RED);
+        Polygon roof = new Polygon();
+
+        roof.addPoint(x + 50, y - 40);
+        roof.addPoint(x + 90, y - 90);
+        roof.addPoint(x + 175, y - 90);
+        roof.addPoint(x + 215, y - 40);
+
+        g2.fillPolygon(roof);
+
+        // Windows
+        g2.setColor(new Color(80, 170, 210));
+
+        // Front window
+        Polygon frontWindow = new Polygon();
+        frontWindow.addPoint(x + 135, y - 82);
+        frontWindow.addPoint(x + 170, y - 82);
+        frontWindow.addPoint(x + 200, y - 45);
+        frontWindow.addPoint(x + 140, y - 45);
+
+        g2.fillPolygon(frontWindow);
+
+        // Back window
+        Polygon backWindow = new Polygon();
+        backWindow.addPoint(x + 95, y - 82);
+        backWindow.addPoint(x + 130, y - 82);
+        backWindow.addPoint(x + 130, y - 45);
+        backWindow.addPoint(x + 70, y - 45);
+
+        g2.fillPolygon(backWindow);
+
+        // Headlight
+        g2.setColor(Color.YELLOW);
+        g2.fillOval(x + 230, y - 25, 15, 15);
+
+        // Rear light
+        g2.setColor(Color.RED.darker());
+        g2.fillOval(x + 5, y - 25, 15, 15);
+
+        // Wheels
+        drawWheel(g2, x + 45, y + 5);
+        drawWheel(g2, x + 180, y + 5);
+    }
+
+    private void drawWheel(Graphics2D g2, int x, int y) {
+
+        // Outer tire
+        g2.setColor(Color.BLACK);
+        g2.fillOval(x - 30, y - 30, 60, 60);
+
+        // Wheel rim
+        g2.setColor(Color.GRAY);
+        g2.fillOval(x - 18, y - 18, 36, 36);
+
+        // Center
+        g2.setColor(Color.BLACK);
+        g2.fillOval(x - 7, y - 7, 14, 14);
+
+        // Wheel spokes
+        g2.setColor(Color.WHITE);
+
+        g2.drawLine(x, y - 15, x, y + 15);
+        g2.drawLine(x - 15, y, x + 15, y);
+        g2.drawLine(x - 11, y - 11, x + 11, y + 11);
+        g2.drawLine(x - 11, y + 11, x + 11, y - 11);
+    }
+
+    @Override
+    public void run() {
+
+        while (true) {
+
+            // Move car
+            carX += 5;
+
+            // Reset position when car leaves screen
+            if (carX > getWidth()) {
+                carX = -250;
+            }
+
+            // Repaint screen
+            repaint();
+
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame("Java Car Animation");
+
+        CarAnimation animation = new CarAnimation();
+
+        frame.add(animation);
+
+        frame.setSize(900, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+}
