@@ -1,0 +1,106 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class CloudAnimation extends JPanel implements Runnable {
+
+    private int cloudX = -200;
+
+    public CloudAnimation() {
+        Thread animationThread = new Thread(this);
+        animationThread.start();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Sky background
+        g2.setColor(new Color(135, 206, 235));
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        // Sun
+        g2.setColor(Color.YELLOW);
+        g2.fillOval(700, 50, 80, 80);
+
+        // Draw moving clouds
+        drawCloud(g2, cloudX, 100);
+        drawCloud(g2, cloudX - 350, 180);
+        drawCloud(g2, cloudX - 700, 80);
+
+        // Ground
+        g2.setColor(new Color(80, 170, 70));
+        g2.fillRect(0, 350, getWidth(), 150);
+    }
+
+    private void drawCloud(Graphics2D g2, int x, int y) {
+
+        // Cloud shadow
+        g2.setColor(new Color(190, 200, 205));
+        g2.fillOval(x, y + 20, 100, 45);
+        g2.fillOval(x + 50, y, 90, 65);
+        g2.fillOval(x + 110, y + 15, 100, 50);
+
+        // Cloud
+        g2.setColor(Color.WHITE);
+
+        g2.fillOval(x, y + 20, 100, 45);
+        g2.fillOval(x + 45, y - 5, 90, 70);
+        g2.fillOval(x + 105, y + 15, 105, 50);
+
+        // Bottom part of cloud
+        g2.fillRoundRect(
+                x + 20,
+                y + 25,
+                160,
+                40,
+                25,
+                25
+        );
+    }
+
+    @Override
+    public void run() {
+
+        while (true) {
+
+            // Move cloud
+            cloudX += 2;
+
+            // Reset cloud position
+            if (cloudX > getWidth() + 250) {
+                cloudX = -250;
+            }
+
+            // Refresh animation
+            repaint();
+
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame("Java Cloud Animation");
+
+        CloudAnimation animation = new CloudAnimation();
+
+        frame.add(animation);
+
+        frame.setSize(900, 500);
+
+        frame.setDefaultCloseOperation(
+                JFrame.EXIT_ON_CLOSE
+        );
+
+        frame.setLocationRelativeTo(null);
+
+        frame.setVisible(true);
+    }
+}
